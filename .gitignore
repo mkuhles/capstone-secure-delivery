@@ -1,0 +1,4 @@
+/app/var/
+/app/vendor/
+/app/.env.local
+/app/.env.*.local
