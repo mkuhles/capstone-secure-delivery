@@ -1,6 +1,6 @@
 # Learn Log
 
-### 2025-12-16 (W1D1 - Tu)
+### 2025-12-16 (W1D1 - Tue)
 
 - **Goal (outcome)**: Set up the capstone repo and get a Symfony app running locally.
 - **Plan (max 3)**:
@@ -17,16 +17,7 @@
 - **New term**: Sec-Fetch-Dest
 
 
-### 2025-12-17 (W1D2 - Mi)
-
-- **Goal (outcome)**:
-    - `/` (public) → 200
-    -  `/login` existiert (Formular)
-    - `/admin` geschützt:
-        - nicht eingeloggt → Redirect zu `/login` (302) oder 401 je nach Config
-        - normaler User → 403
-        - Admin → 200
-
+### 2025-12-17 (W1D2 - Wed)
 
 **Goal (outcome):** Implement form login (AuthN) + role-based access control (AuthZ) and make the UX presentable.
 
@@ -49,5 +40,15 @@
 - Symfony dev exception page for 403: confirmed custom 403 template renders in prod (APP_ENV=prod, APP_DEBUG=0)
 - Twig `component()` was unknown -> fixed by installing `symfony/ux-twig-component`
 
-**Next step (W1D3):**
-- Sessions/Cookies/CSRF: confirm CSRF protection on login form and explain cookies/session behavior in DevTools
+### 2025-12-18 (W1D3 - Thur)
+
+**Goal (outcome):** 
+- Refresh sessions and cookies and understand CSRF
+- investigate capstones login for the principals and fix potential issus
+
+**What I learned today:**
+- see https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Cookies
+    - cookies with `security` attribute requriers https
+    - cookies with `httpOnly` attribute can't be set by js
+    - cookies with `path` attribute will only be send in header if requested URL access the path or subdirectories
+    - cookie prefixes: never heard before, need more information 
