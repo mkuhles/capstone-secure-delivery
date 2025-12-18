@@ -3,12 +3,6 @@ declare(strict_types=1);
 
 // Intentionally insecure legacy lab (LOCAL ONLY)
 
-// --- INSECURE: session fixation demo ---
-// Allows setting the session id via URL parameter.
-if (isset($_GET['sid'])) {
-    session_id((string)$_GET['sid']); // DO NOT DO THIS IN REAL APPS
-}
-
 session_start();
 
 // logout
