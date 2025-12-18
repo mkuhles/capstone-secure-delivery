@@ -7,12 +7,6 @@ session_start();
 $user = $_SESSION['user'] ?? null;
 $isAdmin = (bool)($_SESSION['is_admin'] ?? false);
 
-// --- INSECURE AUTHZ: allow "admin" via query param (privilege escalation demo) ---
-if (isset($_GET['force_admin']) && $_GET['force_admin'] === '1') {
-    $_SESSION['is_admin'] = true; // DO NOT DO THIS IN REAL APPS
-    $isAdmin = true;
-}
-
 // Very weak "gate"
 if (!$user) {
     header('Location: /login.php');
@@ -42,7 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <ul>
     <li><a href="/index.php">Home</a></li>
-    <li><a href="/admin.php?force_admin=1">INSECURE: force admin via URL</a></li>
   </ul>
 
   <hr>
