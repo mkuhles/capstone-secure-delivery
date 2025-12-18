@@ -54,8 +54,11 @@
     - cookie prefixes: never heard before, need more information 
 
 **What I shipped today:**
-- a very insecure legacy app (lagacy-lab) and an attacker
-- fix multiple vulnarabilities at legacy-lab:
-    - dangerous url-parameters
-    - no admin check on admin page
-    - user names and passwords in code
+- Verified session cookie attributes (Secure/HttpOnly/SameSite=Lax) over HTTPS
+- Confirmed CSRF token present in Symfony login form
+- Built legacy-lab CSRF demo and then fixed it with synchronizer token pattern (403 on missing/invalid token)
+- Refactored legacy-lab structure (public/lib/setup/var) and moved state changes (admin_note) to SQLite for persistence
+- Note: session cookie is still PHPSESSID (no __Host- prefix yet); plan to enable later under HTTPS
+
+**Repo tags created:**
+- `csrf-test` (before CSRF possible in legacy-lab admin POST) and `csrf-fixed` (after fix)

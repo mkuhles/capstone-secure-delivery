@@ -15,3 +15,8 @@ There are three web projects in this project:
 
 - `attacker` scripts with bad habits
     - start with `php -S 127.0.0.1:8082`
+
+## Milestone tags
+
+- `csrf-test` — state BEFORE CSRF protection on `POST /admin.php` (CSRF works / attacker.html can change note)
+- `csrf-fixed` — state AFTER CSRF token validation (attacker gets 403)
