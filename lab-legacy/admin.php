@@ -13,6 +13,12 @@ if (!$user) {
     exit;
 }
 
+if (!$isAdmin) {
+    http_response_code(403);
+    echo "Forbidden <a href=\"/index.php\">Go back</a>";
+    exit;
+}
+
 // --- INSECURE STATE CHANGE: no CSRF protection ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // even worse: does not check admin properly
