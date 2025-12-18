@@ -5,12 +5,17 @@ require_once __DIR__ . '/db.php';
 
 $config = require __DIR__ . '/../setup/config.php';
 
-if (session_status() !== PHP_SESSION_ACTIVE) {
-    session_start();
-}
+// Session management
+require_once __DIR__ . '/Session.php';
+$session = new Session(); // optional: Session('LEGACYSESSID')
+$session->start();
 
 $pdo = db_connect($config['db_file']);
 
+// Authentication and Authorization
+require_once __DIR__ . '/Auth.php';
+$auth = new Auth($pdo, $session);
+
 // CSRF protection
 require_once __DIR__ . '/Csrf.php';
-$csrf = new Csrf((bool)($config['csrf_enabled'] ?? true));
+$csrf = new Csrf($session, (bool)($config['csrf_enabled'] ?? true));

@@ -2,9 +2,8 @@
 declare(strict_types=1);
 
 require __DIR__ . '/../lib/bootstrap.php';
-require __DIR__ . '/../lib/auth.php';
 
-$user = current_user($pdo);
+$user = $auth->user();
 
 ?>
 <!doctype html>
@@ -34,7 +33,7 @@ $user = current_user($pdo);
   <hr>
 
   <h2>Notes (insecure demo)</h2>
-  <p>This lab will later demonstrate: missing CSRF checks, session fixation, weak auth logic.</p>
+  <p>This lab may demonstrate missing CSRF checks.</p>
 
   <?php
   $stmt = $pdo->query("

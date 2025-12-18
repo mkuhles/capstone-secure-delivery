@@ -12,5 +12,5 @@ return [
     ],
 
     // vulnerability switches
-    'csrf_enabled' => true,'
+    'csrf_enabled' => true,
 ];

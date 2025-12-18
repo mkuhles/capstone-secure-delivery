@@ -1,35 +1,56 @@
 <?php
 declare(strict_types=1);
 
-function current_user(PDO $pdo): ?array
+final class Auth
 {
-    $userId = $_SESSION['user_id'] ?? null;
-    if (!$userId) return null;
+    public function __construct(
+        private readonly PDO $pdo,
+        private readonly Session $session
+    ) {}
 
-    $stmt = $pdo->prepare('SELECT id, username, is_admin FROM users WHERE id = :id LIMIT 1');
-    $stmt->execute([':id' => (int)$userId]);
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    public function user(): ?array
+    {
+        $userId = $this->session->get('user_id');
+        if (!$userId) {
+            return null;
+        }
 
-    return $row ?: null;
-}
+        $stmt = $this->pdo->prepare('SELECT id, username, is_admin FROM users WHERE id = :id LIMIT 1');
+        $stmt->execute([':id' => (int)$userId]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-function require_login(PDO $pdo): array
-{
-    $user = current_user($pdo);
-    if (!$user) {
-        header('Location: /login.php');
-        exit;
+        return $row ?: null;
     }
-    return $user;
-}
 
-function require_admin(PDO $pdo): array
-{
-    $user = require_login($pdo);
-    if (!(bool)((int)$user['is_admin'])) {
-        http_response_code(403);
-        echo "Forbidden <a href=\"/index.php\">Go back</a>";
-        exit;
+    public function requireLogin(): array
+    {
+        $user = $this->user();
+        if (!$user) {
+            header('Location: /login.php');
+            exit;
+        }
+        return $user;
     }
-    return $user;
+
+    public function requireAdmin(): array
+    {
+        $user = $this->requireLogin();
+        if (!(bool)((int)$user['is_admin'])) {
+            http_response_code(403);
+            echo "Forbidden <a href=\"/index.php\">Go back</a>";
+            exit;
+        }
+        return $user;
+    }
+
+    public function login(int $userId): void
+    {
+        $this->session->regenerate(true);
+        $this->session->set('user_id', $userId);
+    }
+
+    public function logout(): void
+    {
+        $this->session->destroy();
+    }
 }

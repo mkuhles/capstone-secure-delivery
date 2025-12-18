@@ -4,8 +4,9 @@ declare(strict_types=1);
 final class Csrf
 {
     public function __construct(
+        private readonly Session $session,
         private readonly bool $enabled = true,
-        private readonly string $sessionKey = '_csrf'
+        private readonly string $sessionKey = '_csrf',
     ) {}
 
     public function isEnabled(): bool
@@ -19,14 +20,17 @@ final class Csrf
             return '';
         }
 
-        $this->ensureSession();
-        $_SESSION[$this->sessionKey] ??= [];
-
-        if (empty($_SESSION[$this->sessionKey][$id])) {
-            $_SESSION[$this->sessionKey][$id] = bin2hex(random_bytes(32));
+        $bag = $this->session->get($this->sessionKey, []);
+        if (!is_array($bag)) {
+            $bag = [];
         }
 
-        return (string) $_SESSION[$this->sessionKey][$id];
+        if (empty($bag[$id])) {
+            $bag[$id] = bin2hex(random_bytes(32));
+            $this->session->set($this->sessionKey, $bag);
+        }
+
+        return (string)$bag[$id];
     }
 
     public function validate(string $id, ?string $token): bool
@@ -35,8 +39,8 @@ final class Csrf
             return true; // demo mode: treat as valid
         }
 
-        $this->ensureSession();
-        $expected = $_SESSION[$this->sessionKey][$id] ?? '';
+        $bag = $this->session->get($this->sessionKey, []);
+        $expected = is_array($bag) ? ($bag[$id] ?? '') : '';
 
         if (!is_string($expected) || $expected === '' || !is_string($token) || $token === '') {
             return false;
@@ -55,15 +59,12 @@ final class Csrf
             return;
         }
 
-        $this->ensureSession();
-        $_SESSION[$this->sessionKey] ??= [];
-        $_SESSION[$this->sessionKey][$id] = bin2hex(random_bytes(32));
-    }
-
-    private function ensureSession(): void
-    {
-        if (session_status() !== PHP_SESSION_ACTIVE) {
-            session_start();
+        $bag = $this->session->get($this->sessionKey, []);
+        if (!is_array($bag)) {
+            $bag = [];
         }
+
+        $bag[$id] = bin2hex(random_bytes(32));
+        $this->session->set($this->sessionKey, $bag);
     }
 }

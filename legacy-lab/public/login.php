@@ -8,12 +8,7 @@ require __DIR__ . '/../lib/bootstrap.php';
 
 // logout
 if (isset($_GET['logout'])) {
-    $_SESSION = [];
-    if (ini_get('session.use_cookies')) {
-        $params = session_get_cookie_params();
-        setcookie(session_name(), '', time() - 42000, $params['path'], $params['domain'], (bool)$params['secure'], (bool)$params['httponly']);
-    }
-    session_destroy();
+    $session->destroy();
     header('Location: /index.php');
     exit;
 }
@@ -43,12 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Prevent session fixation
             session_regenerate_id(true);
 
-            $_SESSION['user_id'] = (int)$row['id'];
-            $_SESSION['username'] = (string)$row['username'];
-            $_SESSION['is_admin'] = (bool)((int)$row['is_admin']);
-
-            header('Location: /index.php');
-            exit;
+          $auth->login((int)$row['id']);
+          header('Location: /index.php');
+          exit;
         }
 
         $error = 'Invalid credentials';

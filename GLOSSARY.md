@@ -11,6 +11,7 @@
         - `Lax` default, will only be send in header if user navigates to cookie's origin site
         - `None`  specifies that cookies are sent on both originating and cross-site requests. So called thirt party cookies
     - `security` requriers https
+- **CSRF (cross-site request forgery)**: A cross-site request forgery attack tricks a victim into using their credentials to invoke a state-changing activity.
 - **HTTP**: A stateless client-server protocol used for web communication.
 - **JWT (JSON Web Token)**: a way for securely transmitting information between parties as a JSON object
 - **Header**: Metadata sent with a request/response (e.g., Content-Type).

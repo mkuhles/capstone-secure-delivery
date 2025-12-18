@@ -4,13 +4,12 @@ declare(strict_types=1);
 // Intentionally insecure legacy lab (LOCAL ONLY) - DB-backed authz, CSRF protected
 
 require __DIR__ . '/../lib/bootstrap.php';
-require __DIR__ . '/../lib/auth.php';
 
-$user = require_admin($pdo);
+$user = $auth->requireAdmin();
 
 // CSRF token for "admin_note" form
-if (empty($_SESSION['csrf_admin_note'])) {
-    $_SESSION['csrf_admin_note'] = bin2hex(random_bytes(32));
+if (empty($session->get('csrf_admin_note'))) {
+    $session->set('csrf_admin_note', bin2hex(random_bytes(32)));
 }
 
 // handle form submission
