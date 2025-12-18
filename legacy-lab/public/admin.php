@@ -1,18 +1,35 @@
 <?php
 declare(strict_types=1);
 
-// Intentionally insecure legacy lab (LOCAL ONLY) - DB-backed authz
-session_start();
+// Intentionally insecure legacy lab (LOCAL ONLY) - DB-backed authz, CSRF protected
 
 require __DIR__ . '/../lib/bootstrap.php';
 require __DIR__ . '/../lib/auth.php';
 
 $user = require_admin($pdo);
 
-// --- INSECURE STATE CHANGE: no CSRF protection ---
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $note = (string)($_POST['note'] ?? '');
+// CSRF token for "admin_note" form
+if (empty($_SESSION['csrf_admin_note'])) {
+    $_SESSION['csrf_admin_note'] = bin2hex(random_bytes(32));
+}
 
+// handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  // check CSRF token
+  $token = (string)($_POST['_csrf'] ?? '');
+  $expected = (string)($_SESSION['csrf_admin_note'] ?? '');
+
+  if ($expected === '' || !hash_equals($expected, $token)) {
+      http_response_code(403);
+      echo "Forbidden (CSRF)";
+      exit;
+  }
+
+  // rotate token after successful use (one-time token style)
+  // may cause UX issues if user submits the same form twice or has multiple tabs open
+  $_SESSION['csrf_admin_note'] = bin2hex(random_bytes(32));
+
+  $note = (string)($_POST['note'] ?? '');
   $stmt = $pdo->prepare("
       INSERT INTO admin_notes (note, created_at, created_by_user_id)
       VALUES (:note, :created_at, :uid)
@@ -35,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <title>Legacy Lab - Admin</title>
 </head>
 <body>
-  <h1>Admin (insecure)</h1>
+  <h1>Admin (CSRF-protected)</h1>
 
   <p>Logged in as: <code><?= htmlspecialchars((string)$user['username'], ENT_QUOTES, 'UTF-8') ?></code></p>
   <p>Admin flag: <strong><?= ((int)$user['is_admin'] === 1)? 'YES' : 'NO' ?></strong></p>
@@ -47,10 +64,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <hr>
 
-  <h2>Set admin note (insecure state change)</h2>
-  <p>This POST has <strong>no CSRF token</strong>.</p>
+  <h2>Set admin note</h2>
+  <p>This POST is now protected against CSRF.</p>
 
   <form method="post" action="/admin.php">
+    <input type="hidden" name="_csrf" value="<?= htmlspecialchars($_SESSION['csrf_admin_note'], ENT_QUOTES, 'UTF-8') ?>">
     <textarea name="note" rows="3" cols="60" placeholder="This will be shown on /index.php"></textarea><br>
     <button type="submit">Save note</button>
   </form>
