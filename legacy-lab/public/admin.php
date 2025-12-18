@@ -9,11 +9,22 @@ require __DIR__ . '/../lib/auth.php';
 
 $user = require_admin($pdo);
 
-// --- INSECURE STATE CHANGE: no CSRF protection ---if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// --- INSECURE STATE CHANGE: no CSRF protection ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $_SESSION['admin_note'] = (string)($_POST['note'] ?? '');
-    header('Location: /index.php');
-    exit;
+  $note = (string)($_POST['note'] ?? '');
+
+  $stmt = $pdo->prepare("
+      INSERT INTO admin_notes (note, created_at, created_by_user_id)
+      VALUES (:note, :created_at, :uid)
+  ");
+  $stmt->execute([
+      ':note' => $note,
+      ':created_at' => (new DateTimeImmutable('now'))->format(DateTimeInterface::ATOM),
+      ':uid' => (int)$user['id'],
+  ]);
+
+  header('Location: /index.php');
+  exit;
 }
 
 ?>

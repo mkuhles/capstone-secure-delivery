@@ -36,9 +36,25 @@ $user = current_user($pdo);
   <h2>Notes (insecure demo)</h2>
   <p>This lab will later demonstrate: missing CSRF checks, session fixation, weak auth logic.</p>
 
-  <?php if (!empty($_SESSION['admin_note'])): ?>
-    <p><strong>Admin note:</strong> <?= $_SESSION['admin_note'] /* intentionally NOT escaped */ ?></p>
-  <?php endif; ?>
+  <?php
+  $stmt = $pdo->query("
+    SELECT an.note, an.created_at, u.username
+    FROM admin_notes an
+    JOIN users u ON u.id = an.created_by_user_id
+    ORDER BY an.id DESC
+  ");
+  ?>
+
+  <p><strong>admin notes:</strong>
+    <ul>
+      <?php while($latest = $stmt->fetch(PDO::FETCH_ASSOC)): ?>
+        <li>
+          <?= $latest['note'] /* intentionally NOT escaped (legacy demo) */ ?>
+          <small>by <?= htmlspecialchars($latest['username'], ENT_QUOTES, 'UTF-8') ?> at <?= htmlspecialchars($latest['created_at'], ENT_QUOTES, 'UTF-8') ?></small>
+        </li>
+      <?php endwhile; ?>
+    </ul>
+  </p>
 
 </body>
 </html>
