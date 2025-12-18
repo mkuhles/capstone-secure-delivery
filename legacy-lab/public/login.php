@@ -21,6 +21,13 @@ if (isset($_GET['logout'])) {
 $error = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  if (!$csrf->validate('login', $_POST['_csrf'] ?? null)) {
+    http_response_code(403);
+    echo "Forbidden (CSRF)";
+    exit;
+  } else {
+    $csrf->rotate('login');
+  
     $username = trim((string)($_POST['username'] ?? ''));
     $password = (string)($_POST['password'] ?? '');
 
@@ -46,6 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $error = 'Invalid credentials';
     }
+  }
 }
 ?>
 <!doctype html>
@@ -63,6 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <!-- INSECURE: no CSRF token -->
   <form method="post" action="/login.php">
+    <input type="hidden" name="_csrf" value="<?= htmlspecialchars($csrf->token('login'), ENT_QUOTES, 'UTF-8') ?>">
     <label>
       Username:
       <input name="username" autocomplete="username">
