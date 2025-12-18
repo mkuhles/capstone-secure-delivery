@@ -40,7 +40,7 @@
 - Symfony dev exception page for 403: confirmed custom 403 template renders in prod (APP_ENV=prod, APP_DEBUG=0)
 - Twig `component()` was unknown -> fixed by installing `symfony/ux-twig-component`
 
-### 2025-12-18 (W1D3 - Thur)
+### 2025-12-18 (W1D3 - Thu)
 
 **Goal (outcome):** 
 - Refresh sessions and cookies and understand CSRF

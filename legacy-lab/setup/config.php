@@ -10,4 +10,7 @@ return [
         ['user',  'user',  0],
         ['admin', 'admin', 1],
     ],
+
+    // vulnerability switches
+    'csrf_enabled' => true,'
 ];

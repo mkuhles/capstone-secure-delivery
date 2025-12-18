@@ -10,3 +10,7 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 }
 
 $pdo = db_connect($config['db_file']);
+
+// CSRF protection
+require_once __DIR__ . '/Csrf.php';
+$csrf = new Csrf((bool)($config['csrf_enabled'] ?? true));
