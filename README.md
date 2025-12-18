@@ -10,7 +10,8 @@ There are three web projects in this project:
     - form W1D3 on you need `symfony server:ca:install` and restart zour browser
 
 - `lab-legacy` a reely basic app with lots of vulnarabilities, which will be fixed at time
-    - start with `php -S 127.0.0.1:8081`
+    - start with `cd lab-legacy/public; php -S 127.0.0.1:8081`
+    - setup in terminal `cd legacy-lab; php setup/setup.php`
 
 - `attacker` scripts with bad habits
     - start with `php -S 127.0.0.1:8082`

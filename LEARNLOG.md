@@ -52,3 +52,10 @@
     - cookies with `httpOnly` attribute can't be set by js
     - cookies with `path` attribute will only be send in header if requested URL access the path or subdirectories
     - cookie prefixes: never heard before, need more information 
+
+**What I shipped today:**
+- a very insecure legacy app (lagacy-lab) and an attacker
+- fix multiple vulnarabilities at legacy-lab:
+    - dangerous url-parameters
+    - no admin check on admin page
+    - user names and passwords in code

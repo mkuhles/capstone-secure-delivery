@@ -1,11 +1,10 @@
 <?php
 declare(strict_types=1);
 
-// Intentionally insecure legacy lab (LOCAL ONLY)
-session_start();
+require __DIR__ . '/../lib/bootstrap.php';
+require __DIR__ . '/../lib/auth.php';
 
-$user = $_SESSION['user'] ?? null;
-$isAdmin = (bool)($_SESSION['is_admin'] ?? false);
+$user = current_user($pdo);
 
 ?>
 <!doctype html>
@@ -19,8 +18,8 @@ $isAdmin = (bool)($_SESSION['is_admin'] ?? false);
 
   <p><strong>Status:</strong>
     <?php if ($user): ?>
-      Logged in as <code><?= htmlspecialchars($user, ENT_QUOTES, 'UTF-8') ?></code>
-      (admin: <?= $isAdmin ? 'yes' : 'no' ?>)
+      Logged in as <code><?= htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8') ?></code>
+      (admin: <?= ((int)$user['is_admin'] === 1)? 'yes' : 'no' ?>)
     <?php else: ?>
       Not logged in
     <?php endif; ?>
