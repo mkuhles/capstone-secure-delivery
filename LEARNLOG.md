@@ -90,3 +90,11 @@ Add a toggle/switch that flips between raw output and htmlspecialchars(...) for 
 
 - https://127.0.0.1:8000/xss/unsafe?msg=%3Cscript%3Eprint()%3C/script%3E opens the print dialog
 - https://127.0.0.1:8000/xss/safe?msg=%3Cscript%3Eprint()%3C/script%3E echos excapted script tag in message block
+
+#### Legacy Lab
+
+Legacy stored XSS: added central output-encoding wrapper (config toggle), verified unsafe vs safe behavior.
+
+### Take away
+
+Output encoding at the sink is the primary control.

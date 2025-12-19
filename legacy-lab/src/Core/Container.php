@@ -40,7 +40,7 @@ final class Container
     {
         return $this->services['csrf'] ??= new Csrf(
             $this->session(),
-            (bool)($this->config['csrf_enabled'] ?? true)
+            (bool)($this->config['csrf_protected'] ?? true)
         );
     }
 
@@ -57,5 +57,12 @@ final class Container
     public function notes(): AdminNoteRepository
     {
         return $this->services['notes'] ??= new AdminNoteRepository($this->pdo());
+    }
+
+    public function xss(): XSS
+    {
+        return $this->services['xss'] ??= new XSS(
+            (bool)($this->config['xss_protected'] ?? true)
+        );
     }
 }

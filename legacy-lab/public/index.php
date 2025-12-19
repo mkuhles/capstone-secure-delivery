@@ -12,6 +12,8 @@ $user = $auth->user();
 $usersRepo = $container->users();
 $adminNoteRepo = $container->notes();
 
+$xss = $container->xss();
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -50,9 +52,10 @@ $adminNoteRepo = $container->notes();
     <ul>
       <?php foreach ($adminNotes as $note):
         $noteUser = $usersRepo->findById($note->getCreatedByUserId());
+
         ?>
         <li>
-          <?= $note->getNote() /* intentionally NOT escaped (legacy demo) */ ?>
+          <?= $xss->output($note->getNote()) ?>
           <small>by <?= htmlspecialchars($noteUser->getUsername(), ENT_QUOTES, 'UTF-8') ?> at <?= htmlspecialchars($note->getCreatedAt(), ENT_QUOTES, 'UTF-8') ?></small>
         </li>
       <?php endforeach; ?>
