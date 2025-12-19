@@ -1,0 +1,12 @@
+{
+    "name": "mkuhles/legacy-lab",
+    "description": "Legacy Lab for Capstone Secure Delivery",
+    "type": "project",
+    "require": {
+        "php": ">=8.0",
+        "ext-pdo": "*"
+    },
+    "autoload": {
+        "psr-4": {"LegacyLab\\": "src/"}
+    }
+}

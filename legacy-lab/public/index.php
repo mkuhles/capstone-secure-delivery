@@ -1,9 +1,16 @@
 <?php
 declare(strict_types=1);
+// Intentionally insecure legacy lab (LOCAL ONLY) - DB-backed authz, CSRF protected
 
-require __DIR__ . '/../lib/bootstrap.php';
+require __DIR__ . '/../vendor/autoload.php';
+use LegacyLab\Core\Bootstrap;
 
+$container = Bootstrap::container();
+$auth = $container->auth();
 $user = $auth->user();
+
+$usersRepo = $container->users();
+$adminNoteRepo = $container->notes();
 
 ?>
 <!doctype html>
@@ -17,8 +24,8 @@ $user = $auth->user();
 
   <p><strong>Status:</strong>
     <?php if ($user): ?>
-      Logged in as <code><?= htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8') ?></code>
-      (admin: <?= ((int)$user['is_admin'] === 1)? 'yes' : 'no' ?>)
+      Logged in as <code><?= htmlspecialchars($user->getUsername(), ENT_QUOTES, 'UTF-8') ?></code>
+      (admin: <?= ((int)$user->isAdmin() === 1)? 'yes' : 'no' ?>)
     <?php else: ?>
       Not logged in
     <?php endif; ?>
@@ -36,22 +43,19 @@ $user = $auth->user();
   <p>This lab may demonstrate missing CSRF checks.</p>
 
   <?php
-  $stmt = $pdo->query("
-    SELECT an.note, an.created_at, u.username
-    FROM admin_notes an
-    JOIN users u ON u.id = an.created_by_user_id
-    ORDER BY an.id DESC
-  ");
+  $adminNotes = $adminNoteRepo->latestNotes(10);
   ?>
 
   <p><strong>admin notes:</strong>
     <ul>
-      <?php while($latest = $stmt->fetch(PDO::FETCH_ASSOC)): ?>
+      <?php foreach ($adminNotes as $note):
+        $noteUser = $usersRepo->findById($note->getCreatedByUserId());
+        ?>
         <li>
-          <?= $latest['note'] /* intentionally NOT escaped (legacy demo) */ ?>
-          <small>by <?= htmlspecialchars($latest['username'], ENT_QUOTES, 'UTF-8') ?> at <?= htmlspecialchars($latest['created_at'], ENT_QUOTES, 'UTF-8') ?></small>
+          <?= $note->getNote() /* intentionally NOT escaped (legacy demo) */ ?>
+          <small>by <?= htmlspecialchars($noteUser->getUsername(), ENT_QUOTES, 'UTF-8') ?> at <?= htmlspecialchars($note->getCreatedAt(), ENT_QUOTES, 'UTF-8') ?></small>
         </li>
-      <?php endwhile; ?>
+      <?php endforeach; ?>
     </ul>
   </p>
 

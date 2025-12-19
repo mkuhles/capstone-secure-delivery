@@ -3,13 +3,19 @@ declare(strict_types=1);
 
 // Intentionally insecure legacy lab (LOCAL ONLY) - DB-backed authz, CSRF protected
 
-require __DIR__ . '/../lib/bootstrap.php';
+require __DIR__ . '/../vendor/autoload.php';
+use LegacyLab\Core\Bootstrap;
 
-$user = $auth->requireAdmin();
+$container = Bootstrap::container();
+$csrf = $container->csrf();
+$auth = $container->auth();
+$adminNoteRepo = $container->notes();
 
-// CSRF token for "admin_note" form
-if (empty($session->get('csrf_admin_note'))) {
-    $session->set('csrf_admin_note', bin2hex(random_bytes(32)));
+$user = $auth->user();
+if (!$user || !$user->isAdmin()) {
+    http_response_code(403);
+    echo "Forbidden <a href=\"/index.php\">Go back</a>";
+    exit;
 }
 
 // handle form submission
@@ -23,15 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $csrf->rotate('admin_note');
 
   $note = (string)($_POST['note'] ?? '');
-  $stmt = $pdo->prepare("
-      INSERT INTO admin_notes (note, created_at, created_by_user_id)
-      VALUES (:note, :created_at, :uid)
-  ");
-  $stmt->execute([
-      ':note' => $note,
-      ':created_at' => (new DateTimeImmutable('now'))->format(DateTimeInterface::ATOM),
-      ':uid' => (int)$user['id'],
-  ]);
+  $adminNoteRepo->create($note, (int)$user->getId());
 
   header('Location: /index.php');
   exit;
@@ -47,8 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
   <h1>Admin (CSRF-protected)</h1>
 
-  <p>Logged in as: <code><?= htmlspecialchars((string)$user['username'], ENT_QUOTES, 'UTF-8') ?></code></p>
-  <p>Admin flag: <strong><?= ((int)$user['is_admin'] === 1)? 'YES' : 'NO' ?></strong></p>
+  <p>Logged in as: <code><?= htmlspecialchars((string)$user->getUsername(), ENT_QUOTES, 'UTF-8') ?></code></p>
+  <p>Admin flag: <strong><?= ((int)$user->isAdmin() === 1)? 'YES' : 'NO' ?></strong></p>
 
   <ul>
     <li><a href="/index.php">Home</a></li>

@@ -1,5 +1,8 @@
 <?php
 declare(strict_types=1);
+namespace LegacyLab\Core;
+
+use LegacyLab\Core\Session;
 
 final class Csrf
 {

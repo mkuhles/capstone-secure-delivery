@@ -3,3 +3,4 @@
 /app/.env.local
 /app/.env.*.local
 /legacy-lab/var/
+/legacy-lab/vendor/

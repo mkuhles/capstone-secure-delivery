@@ -1,14 +1,17 @@
 <?php
 declare(strict_types=1);
+// Intentionally insecure legacy lab (LOCAL ONLY) - DB-backed authz, CSRF protected
 
-// Intentionally insecure legacy lab (LOCAL ONLY) - DB-backed login
-session_start();
+require __DIR__ . '/../vendor/autoload.php';
+use LegacyLab\Core\Bootstrap;
 
-require __DIR__ . '/../lib/bootstrap.php';
+$container = Bootstrap::container();
+$csrf = $container->csrf();
+$auth = $container->auth();
 
 // logout
 if (isset($_GET['logout'])) {
-    $session->destroy();
+    $auth->logout();
     header('Location: /index.php');
     exit;
 }
@@ -29,16 +32,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($username === '' || $password === '') {
         $error = 'Missing credentials';
     } else {
-        $stmt = $pdo->prepare('SELECT id, username, password_hash, is_admin FROM users WHERE username = :u LIMIT 1');
-        $stmt->execute([':u' => $username]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $user = $auth->attemptLogin($username, $password);
 
         // Constant-ish behavior: verify only if user exists
-        if ($row && password_verify($password, (string)$row['password_hash'])) {
-            // Prevent session fixation
-            session_regenerate_id(true);
+        if ($user) {
+          $auth->login((int)$user->getId());
 
-          $auth->login((int)$row['id']);
           header('Location: /index.php');
           exit;
         }
