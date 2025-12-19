@@ -95,6 +95,14 @@ Add a toggle/switch that flips between raw output and htmlspecialchars(...) for 
 
 Legacy stored XSS: added central output-encoding wrapper (config toggle), verified unsafe vs safe behavior.
 
+### React note:
+
+React escapes values rendered as {msg} by default, so user-controlled strings are treated as text.
+
+dangerouslySetInnerHTML bypasses this protection and behaves like Twig |raw, so attacker-controlled HTML/JS can execute if inserted unsafely.
+
+Use it only with trusted content or after sanitizing with an allowlist-based HTML sanitizer (and still prefer not to render raw HTML).
+
 ### Take away
 
 Output encoding at the sink is the primary control.
