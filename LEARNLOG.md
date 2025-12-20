@@ -63,7 +63,7 @@
 - `csrf-test` (before CSRF possible in legacy-lab admin POST) and `csrf-fixed` (after fix)
 
 
-## 2025-12-18 (W1D4 - Fri)
+## 2025-12-19 (W1D4 - Fri)
 
 ### Goal (outcome)
 Demonstrate and fix one reflected XSS in Symfony/Twig, and (bonus) demonstrate and fix one stored XSS in the Legacy lab using output encoding.
@@ -106,3 +106,37 @@ Use it only with trusted content or after sanitizing with an allowlist-based HTM
 ### Take away
 
 Output encoding at the sink is the primary control.
+
+
+## 2025-12-20 (W1D5 - Sat)
+
+### Goal (outcome)
+
+I can explain SQL Injection (root cause + impact) and I can replace an unsafe string-concatenated SQL query with prepared statements (Legacy Lab). I can also point to a Symfony/Doctrine best-practice example for parameter binding.
+
+### Plan (max 3)
+  1. Read the PortSwigger SQLi overview + capture key terms in GLOSSARY.md
+  2. Legacy Lab: add a small “user search” endpoint that is intentionally vulnerable (string concatenation), reproduce the issue, then fix it with prepared statements (toggle-based)
+  3. Symfony: implement (or locate) a safe search example using Doctrine QueryBuilder with parameters
+
+
+### What I shipped:
+- Legacy Lab: added /search.php demo route with SQLi toggle via config `sqli_protected`
+- Legacy Lab: implemented UserRepository::searchByUsername():
+  - vulnerable mode uses string concatenation (for demo)
+  - protected mode uses prepared statements + parameter binding for `:q`
+  - hardened LIMIT handling by clamping and injecting a safe integer (no tainted input)
+
+### Proof / Evidence
+- SQLi payload test `q=%' OR 1=1 --`:
+  - Protection OFF: 2 results (unexpectedly returns all users)
+  - Protection ON: 0 results (payload treated as literal input)
+
+### Take away
+- SQLi happens when untrusted input becomes part of the SQL query structure.
+- Prepared statements separate query structure from user-controlled values.
+- Not every SQL fragment can be parameterized everywhere (e.g. LIMIT); when needed, clamp and inject safe integers.
+
+
+
+

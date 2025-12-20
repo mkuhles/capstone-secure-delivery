@@ -37,6 +37,7 @@ $xss = $container->xss();
     <li><a href="/login.php">Login</a></li>
     <li><a href="/admin.php">Admin page</a></li>
     <li><a href="/login.php?logout=1">Logout</a></li>
+    <li><a href="/search.php">SQLi search demo</a></li>
   </ul>
 
   <hr>

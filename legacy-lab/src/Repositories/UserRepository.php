@@ -53,6 +53,40 @@ final class UserRepository {
     );
   }
 
+   /**
+   * SQLi demo: when $protected is false, this uses string concatenation (DO NOT DO THIS IN REAL APPS).
+   * When $protected is true, it uses a prepared statement.
+   *
+   * @return User[]
+   */
+  public function searchByUsername(string $q, bool $protected = true, int $limit = 50): array {
+    // enforce limit boundaries, so it's not tainted input
+    $limit = max(1, min(100, $limit));
+
+    if ($protected) {
+      $stmt = $this->pdo->prepare(
+        "SELECT id, username, is_admin FROM users WHERE username LIKE :q ORDER BY id LIMIT $limit"
+      );
+      $stmt->bindValue(':q', '%' . $q . '%', PDO::PARAM_STR);
+      $stmt->execute();
+      $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } else {
+      // vulnerable on purpose
+      $sql = "SELECT id, username, is_admin FROM users WHERE username LIKE '%" . $q . "%' ORDER BY id LIMIT " . (int)$limit;
+      $rows = $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    $users = [];
+    foreach ($rows as $row) {
+      $users[] = new User(
+        id: (int)$row['id'],
+        username: (string)$row['username'],
+        isAdmin: (bool)((int)$row['is_admin'])
+      );
+    }
+    return $users;
+  }
+
   public function isAdmin(int $userId): bool {
     $stmt = $this->pdo->prepare('SELECT is_admin FROM users WHERE id = :id');
     $stmt->execute(['id' => $userId]);
@@ -62,4 +96,6 @@ final class UserRepository {
     }
     return (bool)((int)$row['is_admin']);
   }
+
+
 }

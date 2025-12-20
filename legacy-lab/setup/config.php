@@ -14,4 +14,5 @@ return [
     // vulnerability switches
     'csrf_protected' => true,
     'xss_protected' => true,
+    'sqli_protected' => false,
 ];
