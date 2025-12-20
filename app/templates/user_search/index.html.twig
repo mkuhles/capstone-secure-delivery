@@ -1,0 +1,40 @@
+{# app/templates/user_search/index.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello UserSearchController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <h1>Hello {{ controller_name }}! ✅</h1>
+
+    <form method="get" action="/user/search">
+        <label for="q">Search Users:</label>
+        <input type="text" id="q" name="q" value="{{ app.request.query.get('q') }}">
+        <button type="submit">Search</button>
+    </form>
+    {% if users is defined %}
+        <h2>Search Results:</h2>
+        {% if users|length > 0 %}
+            <ul>
+                {% for user in users %}
+                    <li>{{ user.username }}; ID: {{ user.id }}; is admin: {{ user.isAdmin ? 'Yes' : 'No' }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No users found.</p>
+        {% endif %}
+    {% endif %}
+
+    This friendly message is coming from:
+    <ul>
+        <li>Your controller at <code>I:/dev/capstone-secure-delivery/app/src/Controller/UserSearchController.php</code></li>
+        <li>Your template at <code>I:/dev/capstone-secure-delivery/app/templates/user_search/index.html.twig</code></li>
+    </ul>
+</div>
+{% endblock %}

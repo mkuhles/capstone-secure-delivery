@@ -1,4 +1,5 @@
 <?php
+// app/src/Repository/UserRepository.php
 
 namespace App\Repository;
 
@@ -31,6 +32,24 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $user->setPassword($newHashedPassword);
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
+    }
+
+    /**
+    * @return User[] Returns an array of User objects
+    */
+    public function searchByUsernameLike(string $q, int $limit = 50): array
+    {
+        // enforce limit boundaries, so it's not tainted input
+        $limit = max(1, min(100, $limit));   
+    
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.username LIKE :q')
+            ->setParameter('q', '%' . $q . '%')
+            ->orderBy('u.id', 'ASC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
     //    /**

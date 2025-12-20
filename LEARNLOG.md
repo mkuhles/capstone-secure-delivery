@@ -126,6 +126,9 @@ I can explain SQL Injection (root cause + impact) and I can replace an unsafe st
   - vulnerable mode uses string concatenation (for demo)
   - protected mode uses prepared statements + parameter binding for `:q`
   - hardened LIMIT handling by clamping and injecting a safe integer (no tainted input)
+- Symfony (ORM): `/user/search` using Doctrine QueryBuilder with `:q` + `setParameter()` + `setMaxResults()`
+- Symfony (DBAL): `/user/search-dbal` using `executeQuery()` with named parameters (LIMIT injected as clamped int)
+
 
 ### Proof / Evidence
 - SQLi payload test `q=%' OR 1=1 --`:
@@ -134,6 +137,7 @@ I can explain SQL Injection (root cause + impact) and I can replace an unsafe st
 
 ### Take away
 - SQLi happens when untrusted input becomes part of the SQL query structure.
+- SQLi is “data becomes SQL code”: string concatenation is the root cause.
 - Prepared statements separate query structure from user-controlled values.
 - Not every SQL fragment can be parameterized everywhere (e.g. LIMIT); when needed, clamp and inject safe integers.
 

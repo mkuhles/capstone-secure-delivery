@@ -1,4 +1,5 @@
 <?php
+// app/src/Entity/User.php
 
 namespace App\Entity;
 
@@ -93,6 +94,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->password = $password;
 
         return $this;
+    }
+
+    public function isAdmin(): bool
+    {
+        return in_array('ROLE_ADMIN', $this->getRoles(), true);
     }
 
     /**
