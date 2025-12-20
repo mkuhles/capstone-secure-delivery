@@ -14,5 +14,16 @@ return [
     // vulnerability switches
     'csrf_protected' => true,
     'xss_protected' => true,
-    'sqli_protected' => false,
+    'sqli_protected' => true,
+    'cors_protected' => true,
+
+
+    // allowlist of trusted browser origins (scheme + host + port)
+    'cors_allowed_origins' => [
+        'http://127.0.0.1:8081',
+    ],
+
+    // only relevant for credentialed cross-origin requests (cookies/auth)
+    // (we'll set this to true in the vulnerable mode later to demonstrate the risk)
+    'cors_allow_credentials' => false,
 ];

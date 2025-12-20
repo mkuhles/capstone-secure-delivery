@@ -15,7 +15,7 @@ There are three web projects in this project:
     - run composer `composer dump-autoload -o`
 
 - `attacker` scripts with bad habits
-    - start with `php -S 127.0.0.1:8082`
+    - start with `cd attacker; php -S 127.0.0.1:8082`
 
 ## Milestone tags
 

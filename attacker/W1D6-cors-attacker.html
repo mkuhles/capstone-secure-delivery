@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CORS Attacker</title>
+</head>
+<body>
+    <h1>CORS Attacker</h1>
+    <p>This page demonstrates a CORS vulnerability.</p>
+
+    <button id="btnLegacy">Send cross-origin POST to LegacyLab</button>
+    <button id="btnSymfony">Send cross-origin POST to Symfony</button>
+    <pre id="out"></pre>
+
+    <script>
+        const out = document.getElementById('out');
+        document.getElementById("btnLegacy").addEventListener("click", async () => {
+            await request("http://127.0.0.1:8081/api/ping.php", "LegacyLab");
+        });
+        document.getElementById("btnSymfony").addEventListener("click", async () => {
+            await request("https://127.0.0.1:8000/api/ping", "Symfony");
+        });
+
+        async function request(url, target) {
+            out.textContent = "Sending to "+target+"("+url+") (check DevTools → Network for OPTIONS + POST)\n";
+
+            try {
+                const res = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Api-Key": "demo"
+                },
+                body: JSON.stringify({})
+                });
+
+                const text = await res.text();
+                out.textContent += `HTTP ${res.status}\n${text}\n`;
+            } catch (e) {
+                out.textContent += `Fetch error: ${e}\n`;
+            }
+        }
+    </script>
+</body>
+</html>

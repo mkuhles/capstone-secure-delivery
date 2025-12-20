@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace LegacyLab\Core;
 
+use LegacyLab\Core\Cors;
+use LegacyLab\Core\XSS;
 use LegacyLab\Core\Csrf;
 use LegacyLab\Core\Database;
 use LegacyLab\Core\Session;
@@ -63,6 +65,15 @@ final class Container
     {
         return $this->services['xss'] ??= new XSS(
             (bool)($this->config['xss_protected'] ?? true)
+        );
+    }
+
+    public function cors(): Cors
+    {
+        return $this->services['cors'] ??= new Cors(
+            (bool)($this->config['cors_protected'] ?? true),
+            (array)($this->config['cors_allowed_origins'] ?? []),
+            (bool)($this->config['cors_allow_credentials'] ?? false),
         );
     }
 }

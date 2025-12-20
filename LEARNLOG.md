@@ -141,6 +141,52 @@ I can explain SQL Injection (root cause + impact) and I can replace an unsafe st
 - Prepared statements separate query structure from user-controlled values.
 - Not every SQL fragment can be parameterized everywhere (e.g. LIMIT); when needed, clamp and inject safe integers.
 
+## 2025-12-20 (W1D6 - Sat)
 
+### Goal (outcome)
+- Understand why OWASP Top 10 is an effective “first step” baseline for secure software development (shared language + prioritization + culture shift).
+- Explain CORS precisely (same-origin policy, CORS headers, preflight) and identify common misconfigurations.
+- Demonstrate a CORS misconfiguration in the Legacy Lab and fix it with an allowlist-based policy.
+- Apply a best-practice CORS configuration in the Symfony app (restricted origins, methods, headers; correct credential handling; correct preflight behavior).
 
+### Proof / Evidence
 
+- Links to commits:
+  - docs: add OWASP Top 10 + CORS glossary entries
+  - legacy: reproduce insecure CORS + add secure allowlist policy
+  - symfony: configure CORS safely (paths + env-based origins) + preflight handling
+- Test evidence (copy results into the log):
+  - curl preflight check (OPTIONS) showing correct Access-Control-Allow-* behavior
+  - curl request from allowed origin returns CORS headers; disallowed origin does not
+  - (Optional) Minimal browser PoC page demonstrating that a cross-origin read is blocked after the fix
+
+### Definitions
+
+- **OWASP (Open Worldwide Application Security Project)**: A non-profit foundation that supports projects, tools, and guidance to improve software security. 
+- **OWASP Top 10**: A standard awareness document listing the most critical web application security risk categories, used as a baseline to align teams on priorities and secure coding practices. 
+- **Same-Origin Policy (SOP)**: A browser security rule that restricts scripts from reading responses from a different origin (scheme/host/port) unless explicitly allowed.
+- **Origin**: The tuple (scheme, host, port) identifying where a request is made from.
+- **CORS (Cross-Origin Resource Sharing)**: An HTTP-header-based mechanism that allows a server to specify which other origins a browser may allow reading resources from; includes optional preflight requests. 
+- **Preflight Request**: A browser-sent OPTIONS request that checks whether the server permits the intended cross-origin method/headers before sending the actual request. 
+- **Credentialed Request (CORS)**: A cross-origin request that includes cookies/HTTP auth/client certificates; requires `Access-Control-Allow-Credentials: true` and cannot use `Access-Control-Allow-Origin: *`.
+- **Access-Control-Allow-Origin**: Response header that indicates which origin may read the response. 
+MDN Web Docs
+- **Access-Control-Allow-Credentials**: Response header that enables credentialed cross-origin requests.
+
+### What I shipped:
+
+#### Legacy Lab
+
+- `Cors` helper with `cors_protected` switch + allowlist logic + explicit preflight handling.
+- public/api/ping.php JSON endpoint protected by `Cors::handle()`.
+- `attacker/W1D5-cors-attacker.html` demo page (Legacy + Symfony targets).
+
+#### Symfony
+- nelmio/cors-bundle setup with path-scoped CORS (^/api/) and allowlist origin.
+- `/api/ping` endpoint plus explicit OPTIONS preflight route.
+
+### Take away
+
+- CORS is enforced by browsers (SOP), but the server must explicitly opt-in via Access-Control-Allow-*.
+- Preflight (OPTIONS) is the common failure point: redirects and missing OPTIONS handling break CORS even when the allowlist is correct.
+- Best practice: scope CORS narrowly (e.g., only /api/*), use an allowlist, and only enable credentials when truly required.
