@@ -219,3 +219,13 @@ I can create a simple threat model for this capstone: a data-flow diagram (DFD),
 - **Abuse Case**: A short attacker-focused scenario describing how a feature can be misused to cause harm.
 - **Mitigation**: A control that reduces likelihood or impact (e.g., CSRF tokens, output encoding, prepared statements, access control).
 - **Validation (Threat Model)**: Concrete checks to confirm mitigations work (tests, PoCs, security regression cases).
+
+### What I shipped:
+- docs: added initial threat model (DFD + STRIDE threats + mitigations + abuse-cases)
+- legacy-lab: validated 3 abuse-cases using switches (CSRF, XSS, SQLi) and documented the proof
+- symfony: mapped existing mitigations (CSRF/login, access_control, parameter binding, CORS allowlist) back into the threat model
+
+### Take away
+- A threat model is only useful if it is tied to concrete entry points and validated with evidence.
+- STRIDE is a great checklist, but the DFD (and trust boundaries) is what makes threats “real”.
+- My Legacy Lab switches are perfect for proving risk → mitigation → regression-style thinking.

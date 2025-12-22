@@ -35,8 +35,8 @@ $xss = $container->xss();
 
   <ul>
     <li><a href="/login.php">Login</a></li>
+    <?php if ($user): ?><li><a href="/login.php?logout=1">Logout</a></li><?php endif; ?>
     <li><a href="/admin.php">Admin page</a></li>
-    <li><a href="/login.php?logout=1">Logout</a></li>
     <li><a href="/search.php">SQLi search demo</a></li>
   </ul>
 
