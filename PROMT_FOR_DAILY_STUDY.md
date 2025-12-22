@@ -26,3 +26,5 @@ Bitte führe mich Schitt für Schritt durch die Inhlate des heutigen Tages.
 
 Heute auf dem Plan steht:
 
+
+SWITCH ON STUDY AND ADD REPO

@@ -190,3 +190,32 @@ MDN Web Docs
 - CORS is enforced by browsers (SOP), but the server must explicitly opt-in via Access-Control-Allow-*.
 - Preflight (OPTIONS) is the common failure point: redirects and missing OPTIONS handling break CORS even when the allowlist is correct.
 - Best practice: scope CORS narrowly (e.g., only /api/*), use an allowlist, and only enable credentials when truly required.
+
+
+## 2025-12-22 (W2D1 - Mon)
+
+### Goal (outcome)
+I can create a simple threat model for this capstone: a data-flow diagram (DFD), a list of assets/attackers/entry points, and a STRIDE-based threat list with concrete mitigations. I can write 5–10 abuse-cases and validate them against the Legacy Lab switches and Symfony best practices.
+
+### Proof / Evidence
+- `notes/threat-model/THREAT_MODEL.md` contains:
+  - a DFD (Mermaid)
+  - assets + threat actors + entry points + trust boundaries
+  - STRIDE threats with mitigations
+  - 10 abuse-cases
+  - a short validation checklist
+- Evidence notes for at least 2 abuse-cases reproduced in Legacy Lab (switch OFF) and blocked after fix (switch ON)
+- Optional: screenshot/export of diagram if I used a diagram tool
+
+### Definitions
+
+- **Threat Modeling**: A structured activity to identify what can go wrong in a system, prioritize risks, and define mitigations and validations based on a model of the system (e.g., DFD).
+- **DFD (Data-Flow Diagram)**: A diagram showing processes, data stores, data flows, and external entities to understand how data moves through a system.
+- **Trust Boundary**: A boundary where the trust level changes (e.g., browser → server). Crossing it requires validation, authz, and defensive controls.
+- **Asset**: Anything valuable that needs protection (e.g., credentials, session cookies, admin actions, user data).
+- **Threat Actor**: A person/system that can attack (e.g., external attacker, malicious website, authenticated user with malicious intent).
+- **Attack Surface**: All reachable entry points where untrusted input can enter (routes, APIs, forms, headers, uploads).
+- **STRIDE**: A threat categorization mnemonic: Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege.
+- **Abuse Case**: A short attacker-focused scenario describing how a feature can be misused to cause harm.
+- **Mitigation**: A control that reduces likelihood or impact (e.g., CSRF tokens, output encoding, prepared statements, access control).
+- **Validation (Threat Model)**: Concrete checks to confirm mitigations work (tests, PoCs, security regression cases).
