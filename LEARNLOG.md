@@ -229,3 +229,58 @@ I can create a simple threat model for this capstone: a data-flow diagram (DFD),
 - A threat model is only useful if it is tied to concrete entry points and validated with evidence.
 - STRIDE is a great checklist, but the DFD (and trust boundaries) is what makes threats “real”.
 - My Legacy Lab switches are perfect for proving risk → mitigation → regression-style thinking.
+
+
+## 2026-01-05 (W2D1)
+
+### Goal (outcome)
+
+- Implement structured logging (JSON / key-value) in both:
+  - Legacy Lab (custom logger)
+  - Symfony app (Monolog JSON formatting + consistent context fields)
+- Implement Correlation ID propagation:
+  - Accept incoming header (e.g. X-Correlation-ID)
+  - Generate if missing
+   Attach to response header
+  - Include in every log line
+- Define a minimal log schema (fields you always emit)
+
+### Proof / Evidence
+
+- Commit(s): W2D2: structured logging + correlation IDs
+- Example log output (copy 3–5 lines) showing:
+  - correlation_id present
+  - consistent fields (`timestamp`, `level`, `message`, `route`/`path`, `user_id` when available)
+- One curl or browser repro:
+  - curl -H "X-Correlation-ID: test-123" ... and logs reflect it
+- Symfony: functional test proving response has X-Correlation-ID
+
+### Definitions
+
+- **Structured Logging**: Logs emitted as machine-parsable key-value data (often JSON) instead of free-form text.
+- **Log Schema**: A consistent set of fields (names + types) that every log entry should include.
+- **Correlation ID**: A unique identifier attached to a request/transaction to correlate log entries across components.
+- **Propagation**: Passing the same correlation ID through request/response boundaries and between services.
+- **Log Context**: Additional structured fields (e.g., user_id, route, ip) attached to log records.
+- **Log Injection (Log Forging)**: Manipulating log output (e.g., via newline/control chars) to create misleading or fake log entries.
+- **Monolog Processor**: A callable that enriches every log record with extra data before it’s written. 
+
+### What I shipped
+
+#### Legacy Lab
+
+- Implemented structured JSON logging with a consistent base schema (timestamp, level, request_id, method, path).
+- Added request ID propagation:
+  - Generate UUIDv4 per request.
+  - Accept incoming request IDs only from trusted proxies.
+  - Always return X-Request-ID in the response.
+- Built a central logging abstraction for the legacy codebase instead of ad-hoc string logging.
+- Demonstrated a log injection (log forging) vulnerability using unstructured logs and user-controlled input.
+- Fixed log injection by:
+  - Switching to structured logging.
+  - Sanitizing control characters in log messages.
+- Implemented context sanitization and redaction:
+  - Dropped super-sensitive fields (passwords, tokens, cookies).
+  - Redacted sensitive fields (e.g. username, email) while keeping field names.
+- Added a fail-safe logging fallback to ensure logs are written even if JSON encoding fails.
+- Introduced feature flags to toggle vulnerable vs. fixed behavior for demonstration purposes.

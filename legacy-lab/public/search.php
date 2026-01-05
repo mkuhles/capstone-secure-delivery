@@ -2,14 +2,10 @@
 declare(strict_types=1);
 // Intentionally insecure legacy lab (LOCAL ONLY) - SQLi demo via config switch
 
-require __DIR__ . '/../vendor/autoload.php';
-
-use LegacyLab\Core\Bootstrap;
 use LegacyLab\Repositories\UserRepository;
 use LegacyLab\Core\Container;
 
-/** @var Container $container */
-$container = Bootstrap::container();
+[$container, $requestId] = require __DIR__ . '/_bootstrap.php';
 
 /** @var UsersRepository $usersRepo */
 $usersRepo = $container->users();

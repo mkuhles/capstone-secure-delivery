@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace LegacyLab\Secrurity;
 
+use LegacyLab\Core\Logger;
 use LegacyLab\Core\Session;
 use LegacyLab\Entities\User;
 use LegacyLab\Repositories\UserRepository;
@@ -12,7 +13,8 @@ final class Auth
     public function __construct(
         private readonly PDO $pdo,
         private readonly Session $session,
-        private readonly UserRepository $userRepository
+        private readonly UserRepository $userRepository,
+        private readonly Logger $logger,
     ) {}
 
     public function user(): ?User
@@ -63,6 +65,10 @@ final class Auth
     public function attemptLogin(string $username, string $password): ?User
     {
         $user = $this->userRepository->verifyPassword($username, $password);
+        // Vulnerable / Legacy:
+        // $this->logger->info("Attempting login for user: $username");
+        // Structured / Safe:
+        $this->logger->info('auth.attempt', ['username' => $username, 'result' => (!$user) ? 'failure' : 'success']);
         return $user ?: null;
     }
 }

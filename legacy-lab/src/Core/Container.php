@@ -6,6 +6,8 @@ use LegacyLab\Core\Cors;
 use LegacyLab\Core\XSS;
 use LegacyLab\Core\Csrf;
 use LegacyLab\Core\Database;
+use LegacyLab\Core\Logger;
+use LegacyLab\Core\RequestId;
 use LegacyLab\Core\Session;
 use LegacyLab\Secrurity\Auth;
 use LegacyLab\Repositories\UserRepository;
@@ -53,7 +55,7 @@ final class Container
 
     public function auth(): Auth
     {
-        return $this->services['auth'] ??= new Auth($this->pdo(), $this->session(), $this->users());
+        return $this->services['auth'] ??= new Auth($this->pdo(), $this->session(), $this->users(), $this->logger());
     }
 
     public function notes(): AdminNoteRepository
@@ -75,5 +77,20 @@ final class Container
             (array)($this->config['cors_allowed_origins'] ?? []),
             (bool)($this->config['cors_allow_credentials'] ?? false),
         );
+    }
+
+    public function logger(): Logger
+    {
+    return $this->services['logger'] ??= new Logger(
+        (string)($this->config['logging_file'] ?? (__DIR__ . '/../../var/log/legacy.jsonl')),
+        $this->requestId(),
+        (bool)($this->config['logging_structured'] ?? true),
+        (bool)($this->config['log_injection_protected'] ?? true),
+    );
+    }
+
+    public function requestId(): RequestId
+    {
+        return $this->services['requestId'] ??= new RequestId();
     }
 }

@@ -16,7 +16,14 @@ return [
     'xss_protected' => true,
     'sqli_protected' => true,
     'cors_protected' => true,
+    'log_injection_protected' => false,
 
+
+    'logging_structured' => true,
+    'logging_file' => __DIR__ . '/../var/log/legacy.jsonl',
+    'canonical_log_lines' => false,
+    'logging_file_canonical' => __DIR__ . '/../var/log/legacy_canonical.jsonl',
+    'trusted_proxies' => ['127.0.0.1'], // später: IP/CIDR vom Ingress/Proxy
 
     // allowlist of trusted browser origins (scheme + host + port)
     'cors_allowed_origins' => [

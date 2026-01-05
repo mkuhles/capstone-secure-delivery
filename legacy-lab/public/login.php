@@ -2,10 +2,7 @@
 declare(strict_types=1);
 // Intentionally insecure legacy lab (LOCAL ONLY) - DB-backed authz, CSRF protected
 
-require __DIR__ . '/../vendor/autoload.php';
-use LegacyLab\Core\Bootstrap;
-
-$container = Bootstrap::container();
+[$container, $requestId] = require __DIR__ . '/_bootstrap.php';
 $csrf = $container->csrf();
 $auth = $container->auth();
 
