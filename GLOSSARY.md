@@ -9,6 +9,7 @@ MDN Web Docs
 - **Authentication (AuthN)**: Proving who a user is (login/identity).
 - **Authorization (AuthZ)**: Deciding what an authenticated user is allowed to do.
 - **Blind SQLi**: No direct query output; attacker infers results via behavior (true/false) or timing.
+- **Clickjacking**: A UI-based attack where a user is tricked into clicking on a hidden or disguised element, often by embedding a page in an iframe.
 - **Cookie**: Small data stored in the browser and sent with requests to maintain state (sessions).
 - **Cookie Attributes**:
     - `httpOnly` can't be set by js
@@ -54,6 +55,7 @@ MDN Web Docs
 - **Trust Boundary**: A boundary where the trust level changes (e.g., browser → server). Crossing it requires validation, authz, and defensive controls.
 - **UNION-based SQLi**: Using UNION SELECT to extract data from other tables when the app returns query results.
 - **Validation (Threat Model)**: Concrete checks to confirm mitigations work (tests, PoCs, security regression cases).
+- **X-Frame-Options**: An HTTP response header that controls whether a page may be embedded in a frame or iframe.
 - **XSS (Cross-Site Scripting)** is a vulnerability where an application injects attacker-controlled input into a page without proper output encoding, enabling arbitrary JavaScript execution in a victim’s browser under the site’s origin.
     - **Reflected XSS** happens when attacker-controlled data from the request (often the URL/query string) is immediately included in the response without proper output encoding, causing JavaScript to execute in the victim’s browser.
     - **Stored XSS** occurs when malicious payloads are saved on the server (e.g., in a database) and later rendered without output encoding, causing the script to execute in users’ browsers.

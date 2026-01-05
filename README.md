@@ -8,6 +8,7 @@ There are three web projects in this project:
 - `app` and symfony app which shows how it should be in modern days
     - start with `symfony setrve`
     - form W1D3 on you need `symfony server:ca:install` and restart zour browser
+    - run tests `php bin/phpunit`
 
 - `lab-legacy` a basic app with lots of vulnarabilities, which will be fixed at time
     - start with `cd legacy-lab/public; php -S 127.0.0.1:8081`

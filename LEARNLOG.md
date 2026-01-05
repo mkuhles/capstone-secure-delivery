@@ -231,7 +231,7 @@ I can create a simple threat model for this capstone: a data-flow diagram (DFD),
 - My Legacy Lab switches are perfect for proving risk → mitigation → regression-style thinking.
 
 
-## 2026-01-05 (W2D1)
+## 2026-01-05 (W2D2)
 
 ### Goal (outcome)
 
@@ -303,3 +303,18 @@ I can create a simple threat model for this capstone: a data-flow diagram (DFD),
 - Trust boundaries matter: identifiers provided by untrusted clients must not be treated as authoritative.
 - Framework-level integration (event subscribers + log processors) is more reliable than ad-hoc logging.
 
+## 2026-01-05 (W2D3)
+
+### Goal (outcome)
+
+Understand and apply essential HTTP security headers to reduce common browser-based attack vectors, and demonstrate their impact in both a legacy application and a Symfony application.
+
+### Proof / Evidence
+
+- Verified presence and behavior of security headers via browser dev tools and automated tests.
+- Demonstrated vulnerable vs. hardened configurations using feature flags.
+
+### Definitions
+
+- **Clickjacking**: A UI-based attack where a user is tricked into clicking on a hidden or disguised element, often by embedding a page in an iframe.
+- **X-Frame-Options**: An HTTP response header that controls whether a page may be embedded in a frame or iframe.
