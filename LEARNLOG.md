@@ -284,3 +284,22 @@ I can create a simple threat model for this capstone: a data-flow diagram (DFD),
   - Redacted sensitive fields (e.g. username, email) while keeping field names.
 - Added a fail-safe logging fallback to ensure logs are written even if JSON encoding fails.
 - Introduced feature flags to toggle vulnerable vs. fixed behavior for demonstration purposes.
+
+#### Symfony
+- Implemented request ID propagation using a kernel event subscriber:
+  - Generate a UUIDv4 per request.
+  - Accept incoming request IDs only from trusted proxies.
+  - Always return X-Request-ID in the response.
+- Added a Monolog processor that automatically enriches every log record with request_id.
+- Ensured request IDs are consistently available across controllers and logs without manual passing.
+- Added functional tests to verify:
+  - X-Request-ID is always present and valid.
+  - Incoming request IDs are accepted from trusted proxies.
+  - Incoming request IDs from untrusted clients are ignored.
+
+### Take away
+
+- Correlation IDs only add value when they are consistently generated, propagated, and trusted.
+- Trust boundaries matter: identifiers provided by untrusted clients must not be treated as authoritative.
+- Framework-level integration (event subscribers + log processors) is more reliable than ad-hoc logging.
+

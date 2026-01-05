@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Controller;
 
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -29,7 +29,7 @@ class LoginControllerTest extends WebTestCase
         /** @var UserPasswordHasherInterface $passwordHasher */
         $passwordHasher = $container->get('security.user_password_hasher');
 
-        $user = (new User())->setEmail('email@example.com');
+        $user = (new User())->setUsername('example');
         $user->setPassword($passwordHasher->hashPassword($user, 'password'));
 
         $em->persist($user);
@@ -43,7 +43,7 @@ class LoginControllerTest extends WebTestCase
         self::assertResponseIsSuccessful();
 
         $this->client->submitForm('Sign in', [
-            '_username' => 'doesNotExist@example.com',
+            '_username' => 'doesNotExist',
             '_password' => 'password',
         ]);
 
@@ -58,7 +58,7 @@ class LoginControllerTest extends WebTestCase
         self::assertResponseIsSuccessful();
 
         $this->client->submitForm('Sign in', [
-            '_username' => 'email@example.com',
+            '_username' => 'example',
             '_password' => 'bad-password',
         ]);
 
@@ -70,7 +70,7 @@ class LoginControllerTest extends WebTestCase
 
         // Success - Login with valid credentials is allowed.
         $this->client->submitForm('Sign in', [
-            '_username' => 'email@example.com',
+            '_username' => 'example',
             '_password' => 'password',
         ]);
 

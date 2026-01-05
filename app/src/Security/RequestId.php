@@ -3,7 +3,7 @@
 namespace App\Security;
 
 final class RequestId {
-    public const HEADER_PRIMARY = 'X-Request-ID-blah';
+    public const HEADER_PRIMARY = 'X-Request-ID';
     public const HEADER_FALLBACK = 'X-Correlation-ID';
 
     private string $id;
