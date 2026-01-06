@@ -17,61 +17,53 @@ use PDO;
 final class Container
 {
     private array $services = [];
+    private ?string $cspNonce = null;
 
     public function __construct(private readonly array $config) {}
 
-    public function config(?string $key = null): mixed
-    {
+    public function config(?string $key = null): mixed {
         if ($key !== null) {
             return $this->config[$key] ?? null;
         }
         return $this->config;
     }
 
-    public function pdo(): PDO
-    {
+    public function pdo(): PDO {
         return $this->services['pdo'] ??= (new Database($this->config['db_file']))->pdo();
     }
 
-    public function session(): Session
-    {
+    public function session(): Session {
         $s = $this->services['session'] ??= new Session();
         $s->start();
         return $s;
     }
 
-    public function csrf(): Csrf
-    {
+    public function csrf(): Csrf {
         return $this->services['csrf'] ??= new Csrf(
             $this->session(),
             (bool)($this->config['csrf_protected'] ?? true)
         );
     }
 
-    public function users(): UserRepository
-    {
+    public function users(): UserRepository {
         return $this->services['users'] ??= new UserRepository($this->pdo());
     }
 
-    public function auth(): Auth
-    {
+    public function auth(): Auth {
         return $this->services['auth'] ??= new Auth($this->pdo(), $this->session(), $this->users(), $this->logger());
     }
 
-    public function notes(): AdminNoteRepository
-    {
+    public function notes(): AdminNoteRepository {
         return $this->services['notes'] ??= new AdminNoteRepository($this->pdo());
     }
 
-    public function xss(): XSS
-    {
+    public function xss(): XSS {
         return $this->services['xss'] ??= new XSS(
             (bool)($this->config['xss_protected'] ?? true)
         );
     }
 
-    public function cors(): Cors
-    {
+    public function cors(): Cors {
         return $this->services['cors'] ??= new Cors(
             (bool)($this->config['cors_protected'] ?? true),
             (array)($this->config['cors_allowed_origins'] ?? []),
@@ -79,8 +71,7 @@ final class Container
         );
     }
 
-    public function logger(): Logger
-    {
+    public function logger(): Logger {
     return $this->services['logger'] ??= new Logger(
         (string)($this->config['logging_file'] ?? (__DIR__ . '/../../var/log/legacy.jsonl')),
         $this->requestId(),
@@ -89,8 +80,20 @@ final class Container
     );
     }
 
-    public function requestId(): RequestId
-    {
+    public function requestId(): RequestId {
         return $this->services['requestId'] ??= new RequestId();
     }
+
+    public function securityHeaders(): SecurityHeaders {
+        return $this->services['securityHeaders'] ??= new SecurityHeaders();
+    }
+
+    public function setCspNonce(?string $nonce): void {
+        $this->cspNonce = $nonce;
+    }
+
+    public function cspNonce(): ?string {
+        return $this->cspNonce;
+    }
+
 }

@@ -10,6 +10,7 @@ MDN Web Docs
 - **Authorization (AuthZ)**: Deciding what an authenticated user is allowed to do.
 - **Blind SQLi**: No direct query output; attacker infers results via behavior (true/false) or timing.
 - **Clickjacking**: A UI-based attack where a user is tricked into clicking on a hidden or disguised element, often by embedding a page in an iframe.
+- **Content Security Policy (CSP)** is a browser-enforced allowlist that restricts where executable content may be loaded from.
 - **Cookie**: Small data stored in the browser and sent with requests to maintain state (sessions).
 - **Cookie Attributes**:
     - `httpOnly` can't be set by js
@@ -30,6 +31,7 @@ MDN Web Docs
 - **Log Context**: Additional structured fields (e.g., user_id, route, ip) attached to log records.
 - **Log Injection (Log Forging)**: Manipulating log output (e.g., via newline/control chars) to create misleading or fake log entries.
 - **Log Schema**: A consistent set of fields (names + types) that every log entry should include.
+- **MIME sniffing**: A browser behavior where the browser ignores the server-declared Content-Type and attempts to guess the actual content type based on the response body. This can lead to security issues such as script execution from non-HTML resources if not prevented.
 - **Mitigation**: A control that reduces likelihood or impact (e.g., CSRF tokens, output encoding, prepared statements, access control).
 - **Monolog Processor**: A callable that enriches every log record with extra data before it’s written. 
 - **Origin**: The tuple (scheme, host, port) identifying where a request is made from.
@@ -55,6 +57,7 @@ MDN Web Docs
 - **Trust Boundary**: A boundary where the trust level changes (e.g., browser → server). Crossing it requires validation, authz, and defensive controls.
 - **UNION-based SQLi**: Using UNION SELECT to extract data from other tables when the app returns query results.
 - **Validation (Threat Model)**: Concrete checks to confirm mitigations work (tests, PoCs, security regression cases).
+- **X-Content-Type-Options**: An HTTP response header that instructs the browser not to perform MIME type sniffing.
 - **X-Frame-Options**: An HTTP response header that controls whether a page may be embedded in a frame or iframe.
 - **XSS (Cross-Site Scripting)** is a vulnerability where an application injects attacker-controlled input into a page without proper output encoding, enabling arbitrary JavaScript execution in a victim’s browser under the site’s origin.
     - **Reflected XSS** happens when attacker-controlled data from the request (often the URL/query string) is immediately included in the response without proper output encoding, causing JavaScript to execute in the victim’s browser.

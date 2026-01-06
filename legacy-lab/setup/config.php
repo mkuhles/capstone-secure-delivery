@@ -29,8 +29,27 @@ return [
     // security headers configuration
     'security_headers' => [
         'x_frame_options' => true,
-    ],
+        'x_content_type_options' => false,
 
+        'csp' => [
+            'enabled' => true,
+
+            // 'report-only' or 'enforce'
+            'mode' => 'enforce',
+
+            // 'none' (no inline), 'unsafe-inline' (demo), 'nonce' (clean)
+            'script_policy' => 'nonce',
+            'style_policy' => 'nonce',
+
+            // basic allowlists
+            'default_src' => ["'self'"],
+            'img_src' => ["'self'", 'https://picsum.photos', 'https://fastly.picsum.photos'],
+            'connect_src' => ["'self'"],
+            'frame_ancestors' => ["'none'"],
+            'base_uri' => ["'self'"],
+            'object_src' => ["'none'"],
+        ],
+    ],
 
     // allowlist of trusted browser origins (scheme + host + port)
     'cors_allowed_origins' => [

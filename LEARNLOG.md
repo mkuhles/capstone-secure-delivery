@@ -318,3 +318,9 @@ Understand and apply essential HTTP security headers to reduce common browser-ba
 
 - **Clickjacking**: A UI-based attack where a user is tricked into clicking on a hidden or disguised element, often by embedding a page in an iframe.
 - **X-Frame-Options**: An HTTP response header that controls whether a page may be embedded in a frame or iframe.
+
+
+
+- CSP in Report-Only revealed blocked inline scripts/styles.
+- Browser console provides actionable feedback before enforcing CSP.
+- Even simple pages rely on inline code by default.
