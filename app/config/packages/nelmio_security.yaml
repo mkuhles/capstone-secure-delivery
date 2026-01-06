@@ -45,3 +45,7 @@ nelmio_security:
         # then copy the report policy in here when ready.
         enforce: { }
 
+    forced_ssl:
+        hsts_max_age: 300           # 5 minutes (safe rollout)
+        hsts_subdomains: true
+        redirect_status_code: 302   # keep temporary while testing

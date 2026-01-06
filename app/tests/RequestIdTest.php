@@ -3,14 +3,13 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Tests\BaseTestCase;
 
-final class RequestIdTest extends WebTestCase
+final class RequestIdTest extends BaseTestCase
 {
     public function testResponseContainsXRequestId(): void
     {
-        $client = static::createClient();
-
+        $client = $this->httpsClient();
         $client->request('GET', '/');
 
         $response = $client->getResponse();
@@ -32,7 +31,7 @@ final class RequestIdTest extends WebTestCase
 
     public function testAcceptsIncomingRequestIdFromTrustedProxy(): void
     {
-        $client = static::createClient();
+        $client = $this->httpsClient();
 
         // Simulate request coming from a trusted proxy IP (matches TRUSTED_PROXIES)
         $client->setServerParameter('REMOTE_ADDR', '127.0.0.1');
@@ -45,7 +44,7 @@ final class RequestIdTest extends WebTestCase
     }
 
     public function testIgnoresIncomingRequestIdFromUntrustedProxy(): void {
-        $client = static::createClient();
+        $client = $this->httpsClient();
 
         // Simulate untrusted client IP (NOT in TRUSTED_PROXIES)
         $client->setServerParameter('REMOTE_ADDR', '10.10.10.10');

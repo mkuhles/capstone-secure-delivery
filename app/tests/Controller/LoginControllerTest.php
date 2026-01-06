@@ -3,17 +3,17 @@
 namespace App\Tests\Controller;
 
 use App\Entity\User;
+use App\Tests\BaseTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class LoginControllerTest extends WebTestCase
+class LoginControllerTest extends BaseTestCase
 {
     private KernelBrowser $client;
 
     protected function setUp(): void
     {
-        $this->client = static::createClient();
+        $this->client = $this->httpsClient();
         $container = static::getContainer();
         $em = $container->get('doctrine.orm.entity_manager');
         $userRepository = $em->getRepository(User::class);

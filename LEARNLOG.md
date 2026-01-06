@@ -313,6 +313,7 @@ Understand and apply essential HTTP security headers to reduce common browser-ba
 
 - Verified presence and behavior of security headers via browser dev tools and automated tests.
 - Demonstrated vulnerable vs. hardened configurations using feature flags.
+- Strict-Transport-Security header present over HTTPS: `max-age=300; includeSubDomains=`
 
 ### Definitions
 
@@ -324,3 +325,33 @@ Understand and apply essential HTTP security headers to reduce common browser-ba
 - CSP in Report-Only revealed blocked inline scripts/styles.
 - Browser console provides actionable feedback before enforcing CSP.
 - Even simple pages rely on inline code by default.
+
+- Strict-Transport-Security header present over HTTPS: max-age=300; includeSubDomains
+
+### What I shipped
+
+#### Symfony
+* Integrated **NelmioSecurityBundle** to manage security headers using Symfony best practices.
+* Implemented **Content Security Policy (CSP)** with **nonce-based authorization** for scripts and styles.
+* Successfully integrated CSP nonces with **Symfony Importmap and Turbo**, including proper handling via `meta[name="csp-nonce"]`.
+* Cleaned up CSP violations by:
+
+  * Adding nonces to inline scripts (Importmap)
+  * Removing or externalizing inline styles
+  * Aligning dynamic Turbo-injected assets with CSP
+* Enabled **HSTS (Strict-Transport-Security)** via `forced_ssl` with a safe rollout configuration.
+* Added **functional tests** verifying presence of:
+
+  * CSP (enforced or report-only)
+  * HSTS over HTTPS
+  * X-Content-Type-Options
+  * Clickjacking protection (X-Frame-Options or CSP `frame-ancestors`)
+* Updated existing tests to correctly simulate **HTTPS**, ensuring compatibility with forced SSL redirects.
+
+### Take away
+
+* CSP with nonces is the correct long-term strategy for modern Symfony apps, especially when using Importmap and Turbo.
+* Nonces are not secrets; they are request-scoped execution permissions bound to the response.
+* Using a battle-tested bundle (NelmioSecurityBundle) avoids fragile custom implementations in production code.
+* Security headers must be tested under realistic conditions (HTTPS), otherwise tests can silently break.
+* Report-Only mode is essential for safely rolling out CSP in real applications.

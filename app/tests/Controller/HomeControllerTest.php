@@ -2,13 +2,13 @@
 
 namespace App\Tests\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Tests\BaseTestCase;
 
-final class HomeControllerTest extends WebTestCase
+final class HomeControllerTest extends BaseTestCase
 {
     public function testIndex(): void
     {
-        $client = static::createClient();
+        $client = $this->httpsClient();
         $client->request('GET', '/');
 
         self::assertResponseIsSuccessful();

@@ -3,11 +3,11 @@
 namespace App\Tests\Controller;
 
 use App\Entity\User;
+use App\Tests\BaseTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-final class AdminControllerTest extends WebTestCase
+final class AdminControllerTest extends BaseTestCase
 {
     private KernelBrowser $client;
     private string $adminUsername = 'exampleAdmin';
@@ -15,7 +15,7 @@ final class AdminControllerTest extends WebTestCase
 
     protected function setUp(): void
     {
-        $this->client = static::createClient();
+        $this->client = $this->httpsClient();
         $container = static::getContainer();
         $em = $container->get('doctrine.orm.entity_manager');
         $userRepository = $em->getRepository(User::class);
@@ -43,7 +43,7 @@ final class AdminControllerTest extends WebTestCase
     {
         $this->client->request('GET', '/admin');
         self::assertResponseRedirects('/login');
-        
+
         $this->client->request('GET', '/login');
         $this->client->submitForm('Sign in', [
             '_username' => $this->adminUsername,
