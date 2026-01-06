@@ -8,7 +8,10 @@
         {% endblock %}
 
         {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
+            {% set _ = csp_nonce('script') %}
+            {% set nonce = csp_nonce('style') %}
+            <meta name="csp-nonce" content="{{ nonce }}">
+            {% block importmap %}{{ importmap('app', { nonce: csp_nonce('script') }) }}{% endblock %}
         {% endblock %}
     </head>
     <body>
