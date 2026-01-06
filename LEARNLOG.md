@@ -320,28 +320,40 @@ Understand and apply essential HTTP security headers to reduce common browser-ba
 - **Clickjacking**: A UI-based attack where a user is tricked into clicking on a hidden or disguised element, often by embedding a page in an iframe.
 - **X-Frame-Options**: An HTTP response header that controls whether a page may be embedded in a frame or iframe.
 
-
-
-- CSP in Report-Only revealed blocked inline scripts/styles.
-- Browser console provides actionable feedback before enforcing CSP.
-- Even simple pages rely on inline code by default.
-
-- Strict-Transport-Security header present over HTTPS: max-age=300; includeSubDomains
-
 ### What I shipped
 
+#### LegacyLab
+
+* Implemented **Content Security Policy (CSP)** from scratch in the Legacy Lab to understand the mechanics behind modern browser security headers.
+* Built a **config-driven CSP system** with runtime switches for:
+  * `report-only` vs `enforce`
+  * `script-src` modes (`none`, `unsafe-inline`, `nonce`)
+* Implemented **per-request CSP nonce generation** and ensured consistent usage between HTTP headers and rendered HTML.
+* Made CSP nonces globally accessible to templates via the application container.
+* Demonstrated CSP behavior by:
+  * Blocking inline scripts and styles by default
+  * Allowing trusted inline scripts/styles using nonces
+  * Explicitly whitelisting external image sources
+* Added additional hardening headers:
+  * `X-Content-Type-Options: nosniff`
+  * `X-Frame-Options: DENY`
+* Documented and tested common CSP pitfalls such as:
+  * MIME sniffing and `nosniff`
+  * Redirect-based asset loading
+  * Inline style vs inline script risks
+  * The interaction between CSP nonces and dynamic DOM injection
+
 #### Symfony
+
 * Integrated **NelmioSecurityBundle** to manage security headers using Symfony best practices.
 * Implemented **Content Security Policy (CSP)** with **nonce-based authorization** for scripts and styles.
 * Successfully integrated CSP nonces with **Symfony Importmap and Turbo**, including proper handling via `meta[name="csp-nonce"]`.
 * Cleaned up CSP violations by:
-
   * Adding nonces to inline scripts (Importmap)
   * Removing or externalizing inline styles
   * Aligning dynamic Turbo-injected assets with CSP
 * Enabled **HSTS (Strict-Transport-Security)** via `forced_ssl` with a safe rollout configuration.
 * Added **functional tests** verifying presence of:
-
   * CSP (enforced or report-only)
   * HSTS over HTTPS
   * X-Content-Type-Options
@@ -349,6 +361,14 @@ Understand and apply essential HTTP security headers to reduce common browser-ba
 * Updated existing tests to correctly simulate **HTTPS**, ensuring compatibility with forced SSL redirects.
 
 ### Take away
+
+#### Legacy Lab
+
+* CSP is most effective when treated as a **deny-by-default** policy and gradually refined.
+* Nonce-based CSP provides strong protection without relying on `unsafe-inline`.
+* Security headers are easier to reason about when implemented once and applied centrally.
+
+#### Symfony
 
 * CSP with nonces is the correct long-term strategy for modern Symfony apps, especially when using Importmap and Turbo.
 * Nonces are not secrets; they are request-scoped execution permissions bound to the response.
