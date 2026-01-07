@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="vendor/autoload.php" colors="true">
+  <testsuites>
+    <testsuite name="legacy-lab">
+      <directory>tests</directory>
+    </testsuite>
+  </testsuites>
+
+  <php>
+    <env name="LL_USER1" value="user"/>
+    <env name="LL_PASS1" value="user"/>
+    <env name="LL_USER2" value="admin"/>
+    <env name="LL_PASS2" value="admin"/>
+  </php>
+</phpunit>
