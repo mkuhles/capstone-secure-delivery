@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 // Intentionally insecure legacy lab (LOCAL ONLY) - DB-backed authz, CSRF protected
 
-[$container, $requestId] = require __DIR__ . '/_bootstrap.php';
+$container = require __DIR__ . '/_bootstrap.php';
 $csrf = $container->csrf();
 $auth = $container->auth();
-$adminNoteRepo = $container->notes();
+$adminNoteRepo = $container->adminNotesRepository();
 
 $user = $auth->user();
 if (!$user || !$user->isAdmin()) {

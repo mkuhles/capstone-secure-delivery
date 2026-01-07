@@ -12,6 +12,7 @@ use LegacyLab\Core\Session;
 use LegacyLab\Secrurity\Auth;
 use LegacyLab\Repositories\UserRepository;
 use LegacyLab\Repositories\AdminNoteRepository;
+use LegacyLab\Repositories\NoteRepository;
 use PDO;
 
 final class Container
@@ -53,8 +54,12 @@ final class Container
         return $this->services['auth'] ??= new Auth($this->pdo(), $this->session(), $this->users(), $this->logger());
     }
 
-    public function notes(): AdminNoteRepository {
-        return $this->services['notes'] ??= new AdminNoteRepository($this->pdo());
+    public function adminNotesRepository(): AdminNoteRepository {
+        return $this->services['adminNotesRepository'] ??= new AdminNoteRepository($this->pdo());
+    }
+
+    public function notesRepository(): NoteRepository {
+        return $this->services['notesRepository'] ??= new NoteRepository($this->pdo());
     }
 
     public function xss(): XSS {

@@ -11,4 +11,4 @@ $container->logger()->info('request.start');
 $security = $container->securityHeaders()->apply($container->config() ?? []);
 $container->setCspNonce($security['csp_nonce']); // pass to view if needed
 
-return [$container];
+return $container;

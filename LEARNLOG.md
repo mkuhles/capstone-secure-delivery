@@ -375,3 +375,22 @@ Understand and apply essential HTTP security headers to reduce common browser-ba
 * Using a battle-tested bundle (NelmioSecurityBundle) avoids fragile custom implementations in production code.
 * Security headers must be tested under realistic conditions (HTTPS), otherwise tests can silently break.
 * Report-Only mode is essential for safely rolling out CSP in real applications.
+
+
+## 2026-01-07 (W2D4)
+
+### Goal (outcome)
+
+* Understand IDOR as an object-level authorization failure and be able to explain the root cause.
+* Add automated tests that prove users can only view/edit **their own** resources.
+* Implement a server-side authorization check that blocks cross-user access (regression-safe).
+
+### Proof / Evidence
+
+* New/updated tests:
+  * owner can access own resource (200)
+  * non-owner cannot access another user’s resource (403 or 404)
+  * admin (if applicable) can access (200)
+* Repro steps for the vulnerability (before fix): “change `id` in URL/body → unauthorized data visible/modified”
+* After fix: same repro returns 403/404 + tests green
+

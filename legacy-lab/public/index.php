@@ -2,12 +2,12 @@
 declare(strict_types=1);
 // Intentionally insecure legacy lab (LOCAL ONLY) - DB-backed authz, CSRF protected
 
-[$container] = require __DIR__ . '/_bootstrap.php';
+$container = require __DIR__ . '/_bootstrap.php';
 $auth = $container->auth();
 $user = $auth->user();
 
 $usersRepo = $container->users();
-$adminNoteRepo = $container->notes();
+$adminNoteRepo = $container->adminNotesRepository();
 
 $xss = $container->xss();
 
@@ -35,6 +35,7 @@ $xss = $container->xss();
     <?php if ($user): ?><li><a href="/login.php?logout=1">Logout</a></li><?php endif; ?>
     <li><a href="/admin.php">Admin page</a></li>
     <li><a href="/search.php">SQLi search demo</a></li>
+    <li><a href="/notes.php">My Notes</a></li>
   </ul>
 
   <hr>

@@ -7,8 +7,8 @@ return [
     // Seeds zentral – hier änderst du Test-User/Passwörter/Rollen.
     'seed_users' => [
         // username, plainPassword, is_admin
-        ['user',  'user',  0],
-        ['admin', 'admin', 1],
+        ['user1',  'User1Pass123!',  0],
+        ['admin', 'AdminPass123!', 1],
     ],
 
     // vulnerability switches
@@ -16,7 +16,8 @@ return [
     'xss_protected' => true,
     'sqli_protected' => true,
     'cors_protected' => true,
-    'log_injection_protected' => false,
+    'log_injection_protected' => true,
+    'idor_protected' => true,
 
 
     // logging configuration

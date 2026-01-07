@@ -8,10 +8,14 @@ if (PHP_SAPI !== 'cli') {
     exit;
 }
 
-require __DIR__ . '/../lib/db.php';
-$config = require __DIR__ . '/config.php';
+require __DIR__ . '/../vendor/autoload.php';
+use LegacyLab\Core\Bootstrap;
 
-$varDir = dirname($config['db_file']);
+$container = Bootstrap::container();
+$pdo = $container->pdo();
+$dbFile = $container->config('db_file');
+
+$varDir = dirname($dbFile);
 if (!is_dir($varDir)) {
     mkdir($varDir, 0777, true);
 }
@@ -19,9 +23,6 @@ if (!is_dir($varDir)) {
 $options = getopt('', ['reset', 'force-passwords']) ?: [];
 $reset = array_key_exists('reset', $options);
 $forcePasswords = array_key_exists('force-passwords', $options);
-
-$dbFile = $config['db_file'];
-$pdo = db_connect($dbFile);
 
 function ensureMigrationsTable(PDO $pdo): void {
     $pdo->exec("
@@ -48,6 +49,8 @@ function markMigration(PDO $pdo, int $version): void {
 
 function resetDb(PDO $pdo): void {
     $pdo->exec("DROP TABLE IF EXISTS users;");
+    $pdo->exec("DROP TABLE IF EXISTS notes;");
+    $pdo->exec("DROP TABLE IF EXISTS admin_notes;");
     $pdo->exec("DROP TABLE IF EXISTS schema_migrations;");
 }
 
@@ -75,7 +78,11 @@ try {
     }
 
     // Run seeds
-    $seedUsers = $config['seed_users'];
+    $seedUsers = $container->config('seed_users') ?? [
+        ['admin', 'AdminPass123!', true],
+        ['user1', 'User1Pass123!', false],
+        ['user2', 'User2Pass123!', false],
+    ];
     $seedUsersFn = require __DIR__ . '/seeds/users.php';
     $seedUsersFn($pdo, $seedUsers, $forcePasswords);
 
