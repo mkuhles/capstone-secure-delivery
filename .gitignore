@@ -4,3 +4,4 @@
 /app/.env.*.local
 /legacy-lab/var/
 /legacy-lab/vendor/
+/legacy-lab/.phpunit.result.cache
