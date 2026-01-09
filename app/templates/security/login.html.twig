@@ -1,10 +1,8 @@
-{% extends 'base.html.twig' %}
+{% extends 'dev.html.twig' %}
 
 {% block title %}Log in!{% endblock %}
 
-{% block body %}
-<div class="example-wrapper">
-    <twig:Menu />
+{% block content %}
 
     <form method="post">
         {% if error %}
@@ -38,5 +36,8 @@
             Sign in
         </button>
     </form>
-</div>
+    {% include 'partials/friendly_message.html.twig' with { 
+            controller_path: 'I:/dev/capstone-secure-delivery/app/src/Controller/SecurityController.php',
+            template_path: 'I:/dev/capstone-secure-delivery/app/templates/security/login.html.twig'
+        } only %}
 {% endblock %}

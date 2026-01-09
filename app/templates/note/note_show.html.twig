@@ -1,11 +1,8 @@
-{% extends 'base.html.twig' %}
+{% extends 'dev.html.twig' %}
 
 {% block title %}Hello NoteController!{% endblock %}
 
-{% block body %}
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-    
+{% block content %}
     {% if note %}
         <h2>Note Details:</h2>
         <div>
@@ -16,10 +13,9 @@
     {% else %}
         <h2>No Note Found.</h2>
     {% endif %}
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>I:/dev/capstone-secure-delivery/app/src/Controller/NoteController.php</code></li>
-        <li>Your template at <code>I:/dev/capstone-secure-delivery/app/templates/note/index.html.twig</code></li>
-    </ul>
-</div>
+
+    {% include 'partials/friendly_message.html.twig' with { 
+            controller_path: 'I:/dev/capstone-secure-delivery/app/src/Controller/NoteController.php',
+            template_path: 'I:/dev/capstone-secure-delivery/app/templates/note/note_show.html.twig'
+        } only %}
 {% endblock %}

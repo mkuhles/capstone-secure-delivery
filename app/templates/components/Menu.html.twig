@@ -1,8 +1,16 @@
 {# app/templates/components/Menu.html.twig #}
 
 <div class="menu">
-    <a href="{{ path('app_home') }}">home</a> |
-    <a href="{{ path('app_login') }}">login</a> |
-    <a href="{{ path('app_logout') }}">logout</a> |
-    <a href="{{ path('app_admin') }}">admin</a>
+    <a href="{{ path('app_home') }}">home</a>
+
+    {% if this.isLoggedIn() %}
+        | <a href="{{ path('note_index') }}">notes</a>
+        | <a href="{{ path('app_logout') }}">logout</a>
+    {% else %}
+        | <a href="{{ path('app_login') }}">login</a>
+    {% endif %}
+
+    {% if this.isAdmin() %}
+        | <a href="{{ path('app_admin') }}">admin</a>
+    {% endif %}
 </div>

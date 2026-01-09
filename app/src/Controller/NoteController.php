@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class NoteController extends AbstractController
 {    
-    #[Route('/note', name: 'note_all')]
+    #[Route('/note', name: 'note_index')]
     public function index(): Response
     {
         $user = $this->getUser();
