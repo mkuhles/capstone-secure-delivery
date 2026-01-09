@@ -26,6 +26,7 @@ MDN Web Docs
 - **CSRF (cross-site request forgery)**: A cross-site request forgery attack tricks a victim into using their credentials to invoke a state-changing activity.
 - **DFD (Data-Flow Diagram)**: A diagram showing processes, data stores, data flows, and external entities to understand how data moves through a system.
 - **HTTP**: A stateless client-server protocol used for web communication.
+- **IDOR (Insecure Direct Object Reference)** A broken access control issue where an application uses a user-controlled identifier (e.g., id=123) to access an object without enforcing object-level authorization, allowing access to other users’ resources.
 - **JWT (JSON Web Token)**: a way for securely transmitting information between parties as a JSON object
 - **Header**: Metadata sent with a request/response (e.g., Content-Type).
 - **Log Context**: Additional structured fields (e.g., user_id, route, ip) attached to log records.
@@ -34,6 +35,7 @@ MDN Web Docs
 - **MIME sniffing**: A browser behavior where the browser ignores the server-declared Content-Type and attempts to guess the actual content type based on the response body. This can lead to security issues such as script execution from non-HTML resources if not prevented.
 - **Mitigation**: A control that reduces likelihood or impact (e.g., CSRF tokens, output encoding, prepared statements, access control).
 - **Monolog Processor**: A callable that enriches every log record with extra data before it’s written. 
+- **Object-level Authorization (Object-level Access Control)** Authorization checks applied to a specific object instance (e.g., “can this user view/edit this note?”), not just to an endpoint or role.
 - **Origin**: The tuple (scheme, host, port) identifying where a request is made from.
 - **OWASP (Open Worldwide Application Security Project)**: A non-profit foundation that supports projects, tools, and guidance to improve software security. 
 - **OWASP Top 10**: A standard awareness document listing the most critical web application security risk categories, used as a baseline to align teams on priorities and secure coding practices. 
@@ -41,6 +43,7 @@ MDN Web Docs
 - **Preflight Request**: A browser-sent OPTIONS request that checks whether the server permits the intended cross-origin method/headers before sending the actual request. 
 - **Prepared Statement**: Query is defined with placeholders first; values are bound separately so input cannot change SQL structure.
 - **Propagation**: Passing the same correlation ID through request/response boundaries and between services.
+- **Resource Enumeration** Attempting to discover valid object identifiers (IDs, filenames, UUIDs) by guessing or iterating them, often aided by differences in responses (403 vs 404, timing, messages).
 - **Same-Origin Policy (SOP)**: A browser security rule that restricts scripts from reading responses from a different origin (scheme/host/port) unless explicitly allowed.
 - **Sec-Fetch-Dest**: Browser header indicating the destination type of a request (e.g., document, script, image). Used as part of Fetch Metadata for request context and defensive filtering.
 - **SQL Injection (SQLi)** Vulnerability where untrusted input becomes part of an SQL query, allowing an attacker to change the query logic/structure.
@@ -57,12 +60,11 @@ MDN Web Docs
 - **Trust Boundary**: A boundary where the trust level changes (e.g., browser → server). Crossing it requires validation, authz, and defensive controls.
 - **UNION-based SQLi**: Using UNION SELECT to extract data from other tables when the app returns query results.
 - **Validation (Threat Model)**: Concrete checks to confirm mitigations work (tests, PoCs, security regression cases).
+- **Voter (Symfony)** A security component that decides if a user is granted an action (attribute) on a specific subject (object), enabling centralized object-level authorization (e.g., NOTE_VIEW on a Note).
 - **X-Content-Type-Options**: An HTTP response header that instructs the browser not to perform MIME type sniffing.
 - **X-Frame-Options**: An HTTP response header that controls whether a page may be embedded in a frame or iframe.
 - **XSS (Cross-Site Scripting)** is a vulnerability where an application injects attacker-controlled input into a page without proper output encoding, enabling arbitrary JavaScript execution in a victim’s browser under the site’s origin.
     - **Reflected XSS** happens when attacker-controlled data from the request (often the URL/query string) is immediately included in the response without proper output encoding, causing JavaScript to execute in the victim’s browser.
     - **Stored XSS** occurs when malicious payloads are saved on the server (e.g., in a database) and later rendered without output encoding, causing the script to execute in users’ browsers.
-
-
 
 

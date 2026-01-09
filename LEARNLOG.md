@@ -394,3 +394,30 @@ Understand and apply essential HTTP security headers to reduce common browser-ba
 * Repro steps for the vulnerability (before fix): “change `id` in URL/body → unauthorized data visible/modified”
 * After fix: same repro returns 403/404 + tests green
 
+#### Legacy Lab:
+
+- `notes.php` supports listing and viewing notes; authorization enforced when `idor_protected=true` (404 for non-owners).
+- POST update on notes is blocked for non-owners (404) and does not modify the data.
+- PHPUnit HTTP integration test verifies:
+  - non-owner cannot view note content (404 + no content leak)
+  - non-owner cannot edit (404) and note remains unchanged
+
+#### Symfony:
+
+- `NoteVoter` enforces `NOTE_VIEW` (and optionally NOTE_EDIT) for Note objects.
+- `NoteController::show(Note $note)` calls `denyAccessUnlessGranted()` and returns 403 for non-owners.
+- PHPUnit test NoteAccessTest verifies owner 200 and non-owner 403.
+
+### What I shipped
+
+- Legacy Lab notes feature (list/view/update) with an IDOR protection toggle.
+- Object-level authorization: owner-only access (admin override optional); non-owner returns 404.
+- PHPUnit integration test using cURL + cookie jar + CSRF token extraction.
+
+### Take away
+
+- IDOR is not about “GET vs POST”; it’s about missing object-level authorization on server-side object access.
+- Repository lookups by ID are fine — authorization must be enforced in controller/policy/voter layer.
+- Returning 404 for unauthorized access can reduce resource enumeration signals (RFC 9110 allows this).
+- Integration tests catch regressions even when internal code is refactored.
+- In Symfony I use voters + `denyAccessUnlessGranted()` and return 403 for forbidden object access (framework-typical), while Legacy Lab used 404 to hide existence.

@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello NoteController!{% endblock %}
+
+{% block body %}
+<div class="example-wrapper">
+    <h1>Hello {{ controller_name }}! ✅</h1>
+
+    {% i = 0 %}
+    {% for note in notes %}
+        <div>
+            <a href="{{ path('app_note', {'id': note.id}) }}">View Note {{ i++ }}</a>
+        </div>
+    {% else %}
+        <p>No notes found.</p>
+    {% endfor %}
+
+    This friendly message is coming from:
+    <ul>
+        <li>Your controller at <code>I:/dev/capstone-secure-delivery/app/src/Controller/NoteController.php</code></li>
+        <li>Your template at <code>I:/dev/capstone-secure-delivery/app/templates/note/index.html.twig</code></li>
+    </ul>
+</div>
+{% endblock %}
